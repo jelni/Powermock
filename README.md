@@ -1,2 +1,2 @@
-# powermock
-A Powercord plugin that allows you to mock someone.
+# Powermock
+A Powercord plugin that allows you to mock someone

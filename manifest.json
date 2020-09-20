@@ -1,0 +1,8 @@
+{
+	"name": "Powermock",
+	"version": "1.0.0",
+	"description": "Mock someone",
+	"author": "jel",
+	"license": "MIT",
+	"repo": "https://github.com/jelni/powermock"
+}

@@ -1,53 +1,53 @@
-/* jshint esversion: 6 */
-
 const { Plugin } = require('powercord/entities');
 
 module.exports = class Mock extends Plugin {
-  startPlugin () {
-    powercord.api.commands.registerCommand({
-      command: 'mock',
-      description: 'Mock someone',
-      usage: '{c} [text]',
-      executor: (args) => this.mock(args.join(' '))
-    });
-  }
+	startPlugin() {
+		powercord.api.commands.registerCommand({
+			command: 'mock',
+			description: 'Mock someone',
+			usage: '{c} [text]',
+			executor: function (args) {
+				if (args.length <= 0) {
+					return;
+				}
 
-  mock (text) {
-    if (!text) {
-      return;
-    }
+				let result = '';
 
-    text = text.toLowerCase();
-    let result_text = '';
+				for (const c of args.join(' ')) {
+					if (c === 'i' || c === 'l') {
+						result += c;
+					} else {
+						let upperCount = 0;
+						let slice = result.slice(-3);
 
-    for (const c of text) {
-      if (c === 'i') {
-        result_text += c;
-      } else if (c === 'l') {
-        result_text += c.toUpperCase();
-      } else if (Math.random() >= this.count_upper(result_text.slice(-3))) {
-        result_text += c.toUpperCase();
-      } else {
-        result_text += c;
-      }
-    }
-    return {
-      send: true,
-      result: result_text
-    };
-  }
+						for (const c of slice) {
+							if (c === c.toLowerCase() && c === c.toUpperCase()) {
+								upperCount += 0.5;
+							} else if (c === c.toUpperCase()) {
+								upperCount++;
+							}
+						}
 
-  count_upper (text) {
-    let count = 0;
-    for (const c of text) {
-      if (c === c.toUpperCase()) {
-        count++;
-      }
-    }
-    return count / text.length;
-  }
+						if (slice.length <= 0) {
+							if (Math.random() < 0.5) {
+								result += c.toLowerCase();
+							} else {
+								result += c.toUpperCase();
+							}
+						} else if (upperCount / slice.length < Math.random()) {
+							result += c.toUpperCase();
+						} else {
+							result += c.toLowerCase();
+						}
+					}
+				}
 
-  pluginWillUnload () {
-    powercord.api.commands.unregisterCommand('mock');
-  }
+				return { send: true, result: result };
+			}
+		});
+	}
+
+	pluginWillUnload() {
+		powercord.api.commands.unregisterCommand('mock');
+	}
 };
